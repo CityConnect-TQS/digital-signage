@@ -21,9 +21,12 @@ export default function Navbar() {
           <p>{date.format("dddd, MMMM DD YYYY")}</p>
         </div>
       </div>
-      <div className="flex flex-col items-end">
-        <p className="text-sm">Hi! It&apos;s 10ºC here in</p>
-        <p className="font-semibold text-xl">Malmö 🇸🇪</p>
+      <div className="flex flex-row items-center gap-4">
+        <div className="flex flex-col items-end">
+          <p className="text-sm">Hi! It&apos;s 10ºC here in</p>
+          <p className="font-semibold text-xl">Malmö 🇸🇪</p>
+        </div>
+        <MaterialSymbol icon="sunny" size={48} />
       </div>
     </div>
   );
