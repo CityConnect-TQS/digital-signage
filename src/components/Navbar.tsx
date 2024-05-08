@@ -17,7 +17,7 @@ export default function Navbar() {
       <div className="flex flex-row gap-4 items-center">
         <img src="/logo.svg" alt="CityConnect" className="h-14 w-14 rounded" />
         <div>
-          <p className="font-bold text-3xl">{date.format("HH:mm")}</p>
+          <p className="font-bold text-3xl">{date.format("HH:mm:ss")}</p>
           <p>{date.format("dddd, MMMM DD YYYY")}</p>
         </div>
       </div>
