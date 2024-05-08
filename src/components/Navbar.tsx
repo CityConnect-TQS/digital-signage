@@ -15,7 +15,7 @@ export default function Navbar() {
   return (
     <div className="flex flex-row justify-between items-center">
       <div className="flex flex-row gap-4 items-center">
-        <MaterialSymbol icon="dark_mode" size={48} />
+        <img src="/logo.svg" alt="CityConnect" className="h-14 w-14 rounded" />
         <div>
           <p className="font-bold text-3xl">{date.format("HH:mm")}</p>
           <p>{date.format("dddd, MMMM DD YYYY")}</p>
