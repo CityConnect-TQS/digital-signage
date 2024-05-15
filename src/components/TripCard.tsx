@@ -1,5 +1,5 @@
-import { Trip } from "@/types/trip";
-import { Card, CardBody } from "@nextui-org/react";
+import { Trip, TripStatus } from "@/types/trip";
+import { Card, CardBody, Chip } from "@nextui-org/react";
 import TripProp from "./TripProp";
 import { DisplayType } from "@/types/config.ts";
 
@@ -9,6 +9,16 @@ interface TripCardProps {
 }
 
 export default function TripCard({ trip, type }: Readonly<TripCardProps>) {
+  const colors: Record<
+    TripStatus,
+    "default" | "primary" | "secondary" | "success" | "warning" | "danger"
+  > = {
+    ONTIME: "primary",
+    DELAYED: "danger",
+    DEPARTED: "warning",
+    ONBOARDING: "success",
+  };
+
   return (
     <Card className="p-4">
       <CardBody className="gap-2">
@@ -25,6 +35,9 @@ export default function TripCard({ trip, type }: Readonly<TripCardProps>) {
               minute: "numeric",
             })}
           </p>
+          <Chip color={colors[trip.status]} variant={"flat"}>
+            {trip.status}
+          </Chip>
         </div>
         <div>
           <TripProp icon="directions_bus">{trip.bus.company}</TripProp>
