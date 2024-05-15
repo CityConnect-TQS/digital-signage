@@ -135,7 +135,7 @@ function Settings() {
               id={"submit"}
               onClick={handleSubmit}
             >
-              Get started
+              {first ? "Get started" : "Save"}
             </Button>
           )}
         </Subscribe>
