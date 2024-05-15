@@ -1,23 +1,37 @@
 import { Trip } from "@/types/trip";
 import TripCard from "./TripCard";
-import { DisplayType } from "@/types/config.ts";
+import { Config } from "@/types/config.ts";
+import { useQuery } from "@tanstack/react-query";
+import { getTrips } from "@/services/tripService.ts";
+import { CircularProgress } from "@nextui-org/react";
 
-interface TripGroupProps {
-  trips: Trip[];
-  type: DisplayType;
-}
+export default function TripGroup() {
+  const config = JSON.parse(localStorage.getItem("config")!) as Config;
 
-export default function TripGroup({ trips, type }: Readonly<TripGroupProps>) {
+  const { data, isPending } = useQuery<Trip[]>({
+    queryKey: ["trips", config.city],
+    queryFn: () =>
+      getTrips({ departure: config.city }).then((res) => res.slice(0, 6)),
+    initialData: [],
+  });
+
   return (
     <div className="flex-1">
       <p className="text-4xl font-bold text-center mb-8">
-        {type === "departure" ? "Departures" : "Arrivals"}
+        {config.type === "departure" ? "Departures" : "Arrivals"}
       </p>
-      <div className="grid gap-8 grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
-        {trips.map((trip) => (
-          <TripCard key={trip.id} trip={trip} type={type} />
-        ))}
-      </div>
+      {!isPending ? (
+        <div className="grid gap-8 grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
+          {data.map((trip) => (
+            <TripCard key={trip.id} trip={trip} type={config.type} />
+          ))}
+        </div>
+      ) : (
+        <div className={"flex flex-row gap-4 items-center"}>
+          <CircularProgress />
+          <p>Fetching trips...</p>
+        </div>
+      )}
     </div>
   );
 }
