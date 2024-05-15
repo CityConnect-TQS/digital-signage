@@ -5,10 +5,12 @@ import { Config } from "@/types/config.ts";
 import { useQuery } from "@tanstack/react-query";
 import { City } from "@/types/city.ts";
 import { getCity } from "@/services/cityService.ts";
+import { useNavigate } from "@tanstack/react-router";
 
 export default function Navbar() {
   const config = JSON.parse(localStorage.getItem("config")!) as Config;
   const [date, setDate] = useState(dayjs());
+  const navigate = useNavigate();
 
   const { data } = useQuery<City>({
     queryKey: ["city", config.city],
@@ -24,7 +26,12 @@ export default function Navbar() {
 
   return (
     <div className="flex flex-row justify-between items-center">
-      <div className="flex flex-row gap-4 items-center">
+      <div
+        className="flex flex-row gap-4 items-center cursor-pointer"
+        onClick={() => {
+          void navigate({ to: "/settings", search: { first: false } });
+        }}
+      >
         <img
           src="/logo.svg"
           alt="CityConnect"
