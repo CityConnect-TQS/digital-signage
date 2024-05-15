@@ -45,7 +45,7 @@ function Index() {
   });
 
   return (
-    <div className="flex flex-col justify-center items-center p-8 h-dvh gap-8">
+    <div className="flex flex-col justify-center items-center p-8 min-h-dvh gap-8">
       <img src="/logo.svg" alt="CityConnect" className="h-16 w-16 rounded-lg" />
       <div className="flex flex-col gap-4 items-center">
         <p className={"font-bold text-3xl"}>Hi there!</p>
