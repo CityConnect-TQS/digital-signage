@@ -1,9 +1,19 @@
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { MaterialSymbol } from "react-material-symbols";
+import { Config } from "@/types/config.ts";
+import { useQuery } from "@tanstack/react-query";
+import { City } from "@/types/city.ts";
+import { getCity } from "@/services/cityService.ts";
 
 export default function Navbar() {
+  const config = JSON.parse(localStorage.getItem("config")!) as Config;
   const [date, setDate] = useState(dayjs());
+
+  const { data } = useQuery<City>({
+    queryKey: ["city", config.city],
+    queryFn: () => getCity(config.city),
+  });
 
   useEffect(() => {
     const timer: NodeJS.Timeout = setInterval(() => {
@@ -28,7 +38,7 @@ export default function Navbar() {
       <div className="flex flex-row items-center gap-4">
         <div className="flex flex-col items-end">
           <p className="text-sm">Hi! It&apos;s 10ºC here in</p>
-          <p className="font-semibold text-xl">Malmö 🇸🇪</p>
+          <p className="font-semibold text-xl">{data?.name}</p>
         </div>
         <MaterialSymbol icon="sunny" size={48} />
       </div>
