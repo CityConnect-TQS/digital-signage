@@ -32,13 +32,13 @@ export default function Navbar() {
         />
         <div>
           <p className="font-bold text-3xl">{date.format("HH:mm:ss")}</p>
-          <p>{date.format("dddd, MMMM DD YYYY")}</p>
+          <p className={"text-lg"}>{date.format("dddd, MMMM DD YYYY")}</p>
         </div>
       </div>
       <div className="flex flex-row items-center gap-4">
         <div className="flex flex-col items-end">
-          <p className="text-sm">Hi! It&apos;s 10ºC here in</p>
-          <p className="font-semibold text-xl">{data?.name}</p>
+          <p className="text-lg">Hi! It&apos;s 10ºC here in</p>
+          <p className="font-semibold text-2xl">{data?.name}</p>
         </div>
         <MaterialSymbol icon="sunny" size={48} />
       </div>
