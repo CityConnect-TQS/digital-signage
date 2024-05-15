@@ -13,24 +13,24 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as DeparturesImport } from './routes/departures'
+import { Route as ArrivalsImport } from './routes/arrivals'
 
 // Create Virtual Routes
 
-const DeparturesLazyImport = createFileRoute('/departures')()
-const ArrivalsLazyImport = createFileRoute('/arrivals')()
 const IndexLazyImport = createFileRoute('/')()
 
 // Create/Update Routes
 
-const DeparturesLazyRoute = DeparturesLazyImport.update({
+const DeparturesRoute = DeparturesImport.update({
   path: '/departures',
   getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/departures.lazy').then((d) => d.Route))
+} as any)
 
-const ArrivalsLazyRoute = ArrivalsLazyImport.update({
+const ArrivalsRoute = ArrivalsImport.update({
   path: '/arrivals',
   getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/arrivals.lazy').then((d) => d.Route))
+} as any)
 
 const IndexLazyRoute = IndexLazyImport.update({
   path: '/',
@@ -46,11 +46,11 @@ declare module '@tanstack/react-router' {
       parentRoute: typeof rootRoute
     }
     '/arrivals': {
-      preLoaderRoute: typeof ArrivalsLazyImport
+      preLoaderRoute: typeof ArrivalsImport
       parentRoute: typeof rootRoute
     }
     '/departures': {
-      preLoaderRoute: typeof DeparturesLazyImport
+      preLoaderRoute: typeof DeparturesImport
       parentRoute: typeof rootRoute
     }
   }
@@ -60,8 +60,8 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren([
   IndexLazyRoute,
-  ArrivalsLazyRoute,
-  DeparturesLazyRoute,
+  ArrivalsRoute,
+  DeparturesRoute,
 ])
 
 /* prettier-ignore-end */

@@ -1,10 +1,16 @@
-import { createLazyFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Navigate } from "@tanstack/react-router";
 import TripGroup from "@/components/TripGroup.tsx";
 import { departures } from "@/dummy/trips.ts";
 import Navbar from "@/components/Navbar.tsx";
 
-export const Route = createLazyFileRoute("/departures")({
+export const Route = createFileRoute("/departures")({
   component: Departures,
+  errorComponent: () => <Navigate search={{}} to={"/"} />,
+  beforeLoad: () => {
+    if (localStorage.getItem("config") === null) {
+      throw new Error("Config isn't set");
+    }
+  },
 });
 
 function Departures() {
