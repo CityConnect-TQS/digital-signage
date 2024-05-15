@@ -22,10 +22,11 @@ function Index() {
   const { data, isPending } = useQuery<City[]>({
     queryKey: ["cities"],
     queryFn: getCities,
+    initialData: [],
   });
 
   const { Field, handleSubmit, Subscribe } = useForm({
-    defaultValues: config || {
+    defaultValues: config ?? {
       type: "",
       city: -1,
     },

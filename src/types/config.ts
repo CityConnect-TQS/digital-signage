@@ -1,6 +1,6 @@
 export type DisplayType = "departure" | "arrival";
 
-export type Config = {
+export interface Config {
   type: DisplayType;
   city: number;
 }
