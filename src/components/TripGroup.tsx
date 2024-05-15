@@ -17,11 +17,11 @@ export default function TripGroup() {
 
   return (
     <div className="flex-1">
-      <p className="text-4xl font-bold text-center mb-8">
+      <p className="text-6xl font-extrabold text-center mb-12">
         {config.type === "departure" ? "Departures" : "Arrivals"}
       </p>
       {!isPending ? (
-        <div className="grid gap-8 grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
+        <div className="grid gap-8 grid-cols-1 lg:grid-cols-2">
           {data.map((trip) => (
             <TripCard key={trip.id} trip={trip} type={config.type} />
           ))}
