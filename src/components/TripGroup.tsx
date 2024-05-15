@@ -1,9 +1,10 @@
 import { Trip } from "@/types/trip";
 import TripCard from "./TripCard";
+import { DisplayType } from "@/types/config.ts";
 
 interface TripGroupProps {
   trips: Trip[];
-  type: "departure" | "arrival";
+  type: DisplayType;
 }
 
 export default function TripGroup({ trips, type }: Readonly<TripGroupProps>) {

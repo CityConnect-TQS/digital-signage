@@ -1,13 +1,14 @@
 import { Trip } from "@/types/trip";
 import { Card, CardBody } from "@nextui-org/react";
 import TripProp from "./TripProp";
+import { DisplayType } from "@/types/config.ts";
 
 interface TripCardProps {
   trip: Trip;
-  type: "departure" | "arrival";
+  type: DisplayType;
 }
 
-export default function TripCard({ trip, type }: TripCardProps) {
+export default function TripCard({ trip, type }: Readonly<TripCardProps>) {
   return (
     <Card className="p-4">
       <CardBody className="gap-2">
