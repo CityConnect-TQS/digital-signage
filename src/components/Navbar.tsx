@@ -6,6 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { City } from "@/types/city.ts";
 import { getCity } from "@/services/cityService.ts";
 import { useNavigate } from "@tanstack/react-router";
+import { Button } from "@nextui-org/react";
 
 export default function Navbar() {
   const config = JSON.parse(localStorage.getItem("config")!) as Config;
@@ -26,12 +27,7 @@ export default function Navbar() {
 
   return (
     <div className="flex flex-row justify-between items-center">
-      <div
-        className="flex flex-row gap-4 items-center cursor-pointer"
-        onClick={() => {
-          void navigate({ to: "/settings", search: { first: false } });
-        }}
-      >
+      <div className="flex flex-row gap-4 items-center group">
         <img
           src="/logo.svg"
           alt="CityConnect"
@@ -41,6 +37,15 @@ export default function Navbar() {
           <p className="font-bold text-3xl">{date.format("HH:mm:ss")}</p>
           <p className={"text-lg"}>{date.format("dddd, MMMM DD YYYY")}</p>
         </div>
+        <Button
+          isIconOnly
+          className={"hidden group-hover:flex"}
+          onClick={() => {
+            void navigate({ to: "/settings", search: { first: false } });
+          }}
+        >
+          <MaterialSymbol icon={"settings"} size={24} />
+        </Button>
       </div>
       <div className="flex flex-row items-center gap-4">
         <div className="flex flex-col items-end">
