@@ -2,6 +2,8 @@ import { Bus } from "./bus";
 import { City } from "./city";
 import { CurrencyParams } from "@/types/currency.ts";
 
+export type TripStatus = "ONTIME" | "DELAYED" | "DEPARTED" | "ONBOARDING";
+
 export interface Trip {
   id: number;
   bus: Bus;
@@ -11,6 +13,8 @@ export interface Trip {
   arrivalTime: Date;
   price: number;
   freeSeats: number;
+  status: TripStatus;
+  delay: number;
 }
 
 export type TripSearchParameters = CurrencyParams & {
