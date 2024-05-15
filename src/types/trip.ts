@@ -1,6 +1,5 @@
-import { Bus, BusReference } from "./bus";
-import { City, CityReference } from "./city";
-import { CurrencyParams } from "./currency";
+import { Bus } from "./bus";
+import { City } from "./city";
 
 export interface Trip {
   id: number;
@@ -12,31 +11,3 @@ export interface Trip {
   price: number;
   freeSeats: number;
 }
-
-export type TripCreate = Omit<
-  Trip,
-  | "id"
-  | "bus"
-  | "departure"
-  | "arrival"
-  | "departureTime"
-  | "arrivalTime"
-  | "price"
-  | "freeSeats"
-> & {
-  bus: BusReference;
-  departure: CityReference;
-  arrival: CityReference;
-  departureTime: Date | string;
-  arrivalTime: Date | string;
-  price: number;
-};
-
-export type TripReference = Pick<Trip, "id">;
-
-export type TripSearchParameters = CurrencyParams & {
-  departure?: number;
-  arrival?: number;
-  departureTime?: string;
-  seats?: number;
-};
