@@ -9,9 +9,13 @@ export default function TripGroup() {
   const config = JSON.parse(localStorage.getItem("config")!) as Config;
 
   const { data, isPending } = useQuery<Trip[]>({
-    queryKey: ["trips", config.city],
+    queryKey: ["trips", config.city, config.type],
     queryFn: () =>
-      getTrips({ departure: config.city }).then((res) => res.slice(0, 6)),
+      getTrips(
+        config.type === "departure"
+          ? { departure: config.city }
+          : { arrival: config.city },
+      ).then((res) => res.slice(0, 6)),
     initialData: [],
   });
 
