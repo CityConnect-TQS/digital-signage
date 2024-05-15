@@ -1,4 +1,4 @@
-import { createLazyFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Button, Select, SelectItem, Skeleton } from "@nextui-org/react";
 import { getCities } from "@/services/cityService.ts";
 import { City } from "@/types/city.ts";
@@ -8,7 +8,7 @@ import { zodValidator } from "@tanstack/zod-form-adapter";
 import { z } from "zod";
 import { Config } from "@/types/config.ts";
 
-export const Route = createLazyFileRoute("/")({
+export const Route = createFileRoute("/settings")({
   component: Index,
 });
 
@@ -40,7 +40,7 @@ function Index() {
     onSubmit: async ({ value }) => {
       localStorage.setItem("config", JSON.stringify(value));
       await navigate({
-        to: value.type === "departure" ? "/departures" : "/arrivals",
+        to: "/",
       });
     },
   });
