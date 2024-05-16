@@ -8,7 +8,7 @@ export const colors: Record<
   DELAYED: "danger",
   DEPARTED: "warning",
   ONBOARDING: "success",
-  ARRIVED: "default",
+  ARRIVED: "success",
 };
 
 export const names: Record<TripStatus, string> = {
