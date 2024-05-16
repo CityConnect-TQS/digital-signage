@@ -3,6 +3,7 @@ import { Card, CardBody, Chip } from "@nextui-org/react";
 import TripProp from "./TripProp";
 import { DisplayType } from "@/types/config.ts";
 import { colors, names } from "@/utils/status.ts";
+import { cn } from "@/utils/cn.ts";
 
 interface TripCardProps {
   trip: Trip;
@@ -10,6 +11,10 @@ interface TripCardProps {
 }
 
 export default function TripCard({ trip, type }: Readonly<TripCardProps>) {
+  const delayTimeComputed = new Date(
+    (type === "departure" ? trip.departureTime : trip.arrivalTime).getTime() +
+      trip.delay * 60000,
+  );
   return (
     <Card className="p-4">
       <CardBody className="flex flex-row gap-2 justify-between items-center">
@@ -17,15 +22,31 @@ export default function TripCard({ trip, type }: Readonly<TripCardProps>) {
           <p className="font-bold text-4xl">
             {type === "departure" ? trip.arrival.name : trip.departure.name}
           </p>
-          <p className="text-3xl">
-            {(type === "departure"
-              ? trip.departureTime
-              : trip.arrivalTime
-            ).toLocaleString("pt-PT", {
-              hour: "numeric",
-              minute: "numeric",
-            })}
-          </p>
+          <div className={"flex flex-row items-center gap-2"}>
+            {trip.status === "DELAYED" && (
+              <p className="text-3xl">
+                {delayTimeComputed.toLocaleString("pt-PT", {
+                  hour: "numeric",
+                  minute: "numeric",
+                })}
+              </p>
+            )}
+            <p
+              className={cn(
+                "text-3xl",
+                trip.delay > 0 &&
+                  "text-default-400 font-extralight line-through",
+              )}
+            >
+              {(type === "departure"
+                ? trip.departureTime
+                : trip.arrivalTime
+              ).toLocaleString("pt-PT", {
+                hour: "numeric",
+                minute: "numeric",
+              })}
+            </p>
+          </div>
         </div>
         <div className={"flex flex-row gap-8"}>
           <TripProp icon="directions_bus" title={"Company"}>
@@ -34,7 +55,6 @@ export default function TripCard({ trip, type }: Readonly<TripCardProps>) {
           <TripProp icon="timer" title={"Status"} isText={false}>
             <Chip color={colors[trip.status]} variant={"flat"}>
               {names[trip.status]}
-              {trip.status === "DELAYED" && ` (${trip.delay}min)`}
             </Chip>
           </TripProp>
           {type === "departure" && (
