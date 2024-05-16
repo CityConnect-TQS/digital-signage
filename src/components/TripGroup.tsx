@@ -1,29 +1,15 @@
 import { Trip } from "@/types/trip";
 import TripCard from "./TripCard";
 import { Config } from "@/types/config.ts";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { getTrips } from "@/services/tripService.ts";
 import { CircularProgress } from "@nextui-org/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { BASE_API_URL } from "@/services/config.ts";
 import SockJS from "sockjs-client";
 import Stomp from "stompjs";
 
 export default function TripGroup() {
   const config = JSON.parse(localStorage.getItem("config")!) as Config;
-
-  const queryClient = useQueryClient();
-
-  const { data, isPending } = useQuery<Trip[]>({
-    queryKey: ["trips", config.city, config.type],
-    queryFn: () =>
-      getTrips(
-        config.type === "departure"
-          ? { departure: config.city }
-          : { arrival: config.city },
-      ).then((res) => res.slice(0, 6)),
-    initialData: [],
-  });
+  const [trips, setTrips] = useState<Trip[]>();
 
   useEffect(() => {
     const ws = new SockJS(`${BASE_API_URL}ws`);
@@ -36,17 +22,14 @@ export default function TripGroup() {
           `/signage/cities/${config.city}/${config.type}`,
           (new_data) => {
             const parsedData = JSON.parse(new_data.body) as Trip[];
-            queryClient.setQueryData(
-              ["trips", config.city, config.type],
-              () => {
-                return parsedData.map((trip) => {
-                  return {
-                    ...trip,
-                    departureTime: new Date(trip.departureTime),
-                    arrivalTime: new Date(trip.arrivalTime),
-                  };
-                });
-              },
+            setTrips(
+              parsedData.map((trip) => {
+                return {
+                  ...trip,
+                  departureTime: new Date(trip.departureTime),
+                  arrivalTime: new Date(trip.arrivalTime),
+                };
+              }),
             );
           },
         );
@@ -55,23 +38,25 @@ export default function TripGroup() {
         console.error("WebSocket connection failed", e);
       },
     );
-  }, [config.city, config.type, queryClient]);
+  }, [config.city, config.type]);
 
   return (
-    <div className="flex-1">
-      <p className="text-6xl font-extrabold text-center mb-12">
+    <div className="flex-1 flex flex-col gap-12">
+      <p className="text-6xl font-extrabold text-center">
         {config.type === "departure" ? "Departures" : "Arrivals"}
       </p>
-      {!isPending ? (
+      {trips !== undefined ? (
         <div className="grid gap-8 grid-cols-1 lg:grid-cols-2">
-          {data.map((trip) => (
+          {trips.map((trip) => (
             <TripCard key={trip.id} trip={trip} type={config.type} />
           ))}
         </div>
       ) : (
-        <div className={"flex flex-row gap-4 items-center"}>
+        <div
+          className={"flex flex-col gap-4 items-center flex-1 justify-center"}
+        >
           <CircularProgress />
-          <p>Fetching trips...</p>
+          <p>Waiting for trips to arrive...</p>
         </div>
       )}
     </div>
