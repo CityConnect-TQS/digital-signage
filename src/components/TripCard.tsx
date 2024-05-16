@@ -45,10 +45,12 @@ export default function TripCard({ trip, type }: Readonly<TripCardProps>) {
               {trip.status}
             </Chip>
           </TripProp>
-          <TripProp icon="airline_seat_recline_normal" title={"Seats left"}>
-            {trip.freeSeats}
-            <span className={"font-normal"}>/{trip.bus.capacity}</span>
-          </TripProp>
+          {type === "departure" && (
+            <TripProp icon="airline_seat_recline_normal" title={"Seats left"}>
+              {trip.freeSeats}
+              <span className={"font-normal"}>/{trip.bus.capacity}</span>
+            </TripProp>
+          )}
         </div>
       </CardBody>
     </Card>
