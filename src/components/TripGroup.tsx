@@ -1,22 +1,69 @@
 import { Trip } from "@/types/trip";
 import TripCard from "./TripCard";
+import { Config } from "@/types/config.ts";
+import { CircularProgress } from "@nextui-org/react";
+import { useEffect, useState } from "react";
+import { BASE_API_URL } from "@/services/config.ts";
+import SockJS from "sockjs-client";
+import Stomp from "stompjs";
 
-interface TripGroupProps {
-  trips: Trip[];
-  type: "departure" | "arrival";
-}
+export default function TripGroup() {
+  const config = JSON.parse(localStorage.getItem("config")!) as Config;
+  const [trips, setTrips] = useState<Trip[]>();
 
-export default function TripGroup({ trips, type }: TripGroupProps) {
+  useEffect(() => {
+    const ws = new SockJS(`${BASE_API_URL}ws`);
+    const client = Stomp.over(ws);
+
+    client.connect(
+      {},
+      () => {
+        client.subscribe(
+          `/signage/cities/${config.city}/${config.type}`,
+          (new_data) => {
+            const parsedData = JSON.parse(new_data.body) as Trip[];
+            setTrips(
+              parsedData.map((trip) => {
+                return {
+                  ...trip,
+                  departureTime: new Date(trip.departureTime),
+                  arrivalTime: new Date(trip.arrivalTime),
+                };
+              }),
+            );
+          },
+        );
+      },
+      (e) => {
+        console.error("WebSocket connection failed", e);
+      },
+    );
+  }, [config.city, config.type]);
+
   return (
-    <div className="flex-1">
-      <p className="text-4xl font-bold text-center mb-8">
-        {type === "departure" ? "Departures" : "Arrivals"}
+    <div className="flex-1 flex flex-col gap-12">
+      <p className="text-6xl font-extrabold text-center">
+        {config.type === "departure" ? "Departures" : "Arrivals"}
       </p>
-      <div className="grid gap-8 grid-cols-1 lg:grid-cols-2">
-        {trips.map((trip) => (
-          <TripCard key={trip.id} trip={trip} type={type} />
-        ))}
-      </div>
+      {trips !== undefined ? (
+        <div className="grid gap-8 grid-cols-1 lg:grid-cols-2">
+          {trips.map((trip) => (
+            <TripCard key={trip.id} trip={trip} type={config.type} />
+          ))}
+        </div>
+      ) : (
+        <div
+          className={"flex flex-col gap-4 items-center flex-1 justify-center"}
+        >
+          <CircularProgress />
+          <div className={"flex flex-col justify-center items-center"}>
+            <p>Waiting for trips to arrive...</p>
+            <p className={"text-default-400"}>
+              This can take up to 10 seconds.
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
