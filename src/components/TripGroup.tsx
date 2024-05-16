@@ -56,7 +56,12 @@ export default function TripGroup() {
           className={"flex flex-col gap-4 items-center flex-1 justify-center"}
         >
           <CircularProgress />
-          <p>Waiting for trips to arrive...</p>
+          <div className={"flex flex-col justify-center items-center"}>
+            <p>Waiting for trips to arrive...</p>
+            <p className={"text-default-400"}>
+              This can take up to 10 seconds.
+            </p>
+          </div>
         </div>
       )}
     </div>
