@@ -2,7 +2,7 @@ import { Bus } from "./bus";
 import { City } from "./city";
 import { CurrencyParams } from "@/types/currency.ts";
 
-export type TripStatus = "ONTIME" | "DELAYED" | "DEPARTED" | "ONBOARDING";
+export type TripStatus = "ONTIME" | "DELAYED" | "DEPARTED" | "ONBOARDING" | "ARRIVED";
 
 export interface Trip {
   id: number;
