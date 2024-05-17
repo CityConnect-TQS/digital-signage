@@ -12,19 +12,40 @@ export default function TripGroup() {
   useEffect(() => {
     const ws = new WebSocket(WS_API_URL);
 
-    ws.onopen = () => console.log("WebSocket open");
+    ws.onopen = () => {
+      console.log("WebSocket open");
+      ws.send(
+        "CONNECT\n" +
+          "accept-version:1.2,1.1,1.0\n" +
+          "heart-beat:10000,10000\n" +
+          "\n\0",
+      );
+      ws.send(
+        "SUBSCRIBE\n" +
+          "id:sub-0\n" +
+          `destination:/signage/cities/${config.city}/${config.type}\n` +
+          "\n\0",
+      );
+    };
 
     ws.onmessage = (event: MessageEvent<string>) => {
-      const parsedData = JSON.parse(event.data) as Trip[];
-      setTrips(
-        parsedData.map((trip) => {
-          return {
-            ...trip,
-            departureTime: new Date(trip.departureTime),
-            arrivalTime: new Date(trip.arrivalTime),
-          };
-        }),
-      );
+      if (event.data.startsWith("CONNECTED")) {
+        return;
+      }
+
+      const data = JSON.parse(
+        event.data.split("\n").pop()!.slice(0, -1),
+      ) as Trip[];
+
+      const content: Trip[] = data.map((trip) => {
+        return {
+          ...trip,
+          departureTime: new Date(trip.departureTime),
+          arrivalTime: new Date(trip.arrivalTime),
+        };
+      });
+
+      setTrips(content);
     };
 
     ws.onclose = () => console.log("WebSocket closed");
