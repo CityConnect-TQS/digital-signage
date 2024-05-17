@@ -3,41 +3,31 @@ import TripCard from "./TripCard";
 import { Config } from "@/types/config.ts";
 import { CircularProgress } from "@nextui-org/react";
 import { useEffect, useState } from "react";
-import { BASE_API_URL } from "@/services/config.ts";
-import SockJS from "sockjs-client";
-import Stomp from "stompjs";
+import { WS_API_URL } from "@/services/config.ts";
 
 export default function TripGroup() {
   const config = JSON.parse(localStorage.getItem("config")!) as Config;
   const [trips, setTrips] = useState<Trip[]>();
 
   useEffect(() => {
-    const ws = new SockJS(`${BASE_API_URL}ws`);
-    const client = Stomp.over(ws);
+    const ws = new WebSocket(WS_API_URL);
 
-    client.connect(
-      {},
-      () => {
-        client.subscribe(
-          `/signage/cities/${config.city}/${config.type}`,
-          (new_data) => {
-            const parsedData = JSON.parse(new_data.body) as Trip[];
-            setTrips(
-              parsedData.map((trip) => {
-                return {
-                  ...trip,
-                  departureTime: new Date(trip.departureTime),
-                  arrivalTime: new Date(trip.arrivalTime),
-                };
-              }),
-            );
-          },
-        );
-      },
-      (e) => {
-        console.error("WebSocket connection failed", e);
-      },
-    );
+    ws.onopen = () => console.log("WebSocket open");
+
+    ws.onmessage = (event: MessageEvent<string>) => {
+      const parsedData = JSON.parse(event.data) as Trip[];
+      setTrips(
+        parsedData.map((trip) => {
+          return {
+            ...trip,
+            departureTime: new Date(trip.departureTime),
+            arrivalTime: new Date(trip.arrivalTime),
+          };
+        }),
+      );
+    };
+
+    ws.onclose = () => console.log("WebSocket closed");
   }, [config.city, config.type]);
 
   return (
