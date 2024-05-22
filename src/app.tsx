@@ -2,7 +2,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider } from "next-themes";
 import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
-import { RouterProvider, createRouter } from "@tanstack/react-router";
+import { createRouter, RouterProvider } from "@tanstack/react-router";
 import { routeTree } from "./routeTree.gen";
 import "@fontsource-variable/dm-sans";
 import "./index.css";
@@ -11,7 +11,7 @@ import { NextUIProvider } from "@nextui-org/react";
 
 const queryClient = new QueryClient();
 
-const router = createRouter({ routeTree });
+const router = createRouter({ routeTree, basepath: "/digital" });
 
 declare module "@tanstack/react-router" {
   interface Register {
@@ -31,6 +31,6 @@ if (!rootElement.innerHTML) {
           </QueryClientProvider>
         </ThemeProvider>
       </NextUIProvider>
-    </StrictMode>
+    </StrictMode>,
   );
 }
