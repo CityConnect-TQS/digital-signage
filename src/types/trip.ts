@@ -15,6 +15,7 @@ export interface Trip {
   freeSeats: number;
   status: TripStatus;
   delay: number;
+  checkedInSeats: number;
 }
 
 export type TripSearchParameters = CurrencyParams & {
