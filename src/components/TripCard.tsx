@@ -13,7 +13,7 @@ interface TripCardProps {
 export default function TripCard({ trip, type }: Readonly<TripCardProps>) {
   const delayTimeComputed = new Date(
     (type === "departure" ? trip.departureTime : trip.arrivalTime).getTime() +
-      trip.delay * 60000,
+      trip.delay * 60000
   );
   return (
     <Card className="p-4">
@@ -35,7 +35,7 @@ export default function TripCard({ trip, type }: Readonly<TripCardProps>) {
               className={cn(
                 "text-3xl",
                 trip.delay > 0 &&
-                  "text-default-400 font-extralight line-through",
+                  "text-default-400 font-extralight line-through"
               )}
             >
               {(type === "departure"
@@ -49,6 +49,9 @@ export default function TripCard({ trip, type }: Readonly<TripCardProps>) {
           </div>
         </div>
         <div className={"flex flex-row gap-8"}>
+          <TripProp icon="check_box" title={"Check-ins"}>
+            {trip.checkedInSeats}/{trip.bus.capacity}
+          </TripProp>
           <TripProp icon="directions_bus" title={"Company"}>
             {trip.bus.company}
           </TripProp>
