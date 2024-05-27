@@ -50,7 +50,11 @@ export default function TripCard({ trip, type }: Readonly<TripCardProps>) {
         </div>
         <div className={"flex flex-row gap-8"}>
           <TripProp icon="check_box" title={"Check-ins"}>
-            {trip.checkedInSeats}/{trip.bus.capacity}
+            {trip.checkedInSeats}/{trip.bus.capacity - trip.freeSeats}
+          </TripProp>
+          <TripProp icon="airline_seat_recline_normal" title={"Seats left"}>
+            {trip.freeSeats}
+            <span className={"font-normal"}>/{trip.bus.capacity}</span>
           </TripProp>
           <TripProp icon="directions_bus" title={"Company"}>
             {trip.bus.company}
@@ -60,12 +64,6 @@ export default function TripCard({ trip, type }: Readonly<TripCardProps>) {
               {names[trip.status]}
             </Chip>
           </TripProp>
-          {type === "departure" && (
-            <TripProp icon="airline_seat_recline_normal" title={"Seats left"}>
-              {trip.freeSeats}
-              <span className={"font-normal"}>/{trip.bus.capacity}</span>
-            </TripProp>
-          )}
         </div>
       </CardBody>
     </Card>
